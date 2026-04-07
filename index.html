@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>zhengzheng li</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#ebebeb;--ink:#111;--muted:#888;--faint:#bbb;--mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;}
+
+.nav{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:26px 36px;z-index:200;pointer-events:none;}
+.nav button{font-size:14px;color:var(--ink);background:none;border:none;cursor:pointer;font-family:var(--sans);font-weight:300;pointer-events:all;transition:font-size 0.2s ease, opacity 0.2s ease;}
+.nav button:hover{opacity:.45;font-size:16px;}
+.nav-mid{position:fixed;top:26px;left:50%;transform:translateX(-50%);display:flex;gap:32px;z-index:200;}
+.nav-mid button{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans);font-weight:300;letter-spacing:.02em;}
+.nav-mid button.on,.nav-mid button:hover{color:var(--ink);}
+.nav-mid button.on{font-weight:400;}
+.nav-mid button{transition:font-size 0.2s ease, color 0.2s ease;}
+.nav-mid button:hover{font-size:15px;}
+
+.page{display:none;min-height:100vh;}
+.page.on{display:block;animation:fd .3s ease;}
+@keyframes fd{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* HOME */
+#home{position:relative;height:100vh;overflow:hidden;}
+#home.on{display:flex;flex-direction:column;justify-content:flex-end;}
+.home-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.28;}
+.home-label{
+  position:absolute;top:50%;left:0;right:0;
+  transform:translateY(-50%);
+  z-index:2;overflow:hidden;
+  display:flex;flex-direction:column;gap:12px;
+}
+.home-label .ticker-track{
+  display:flex;white-space:nowrap;
+  animation:ticker-rtl 16s linear infinite;
+}
+.home-label .ticker-track.slow{
+  animation-duration:24s;
+}
+/* single item: start fully off right, end fully off left */
+.home-label .ticker-item{
+  display:inline-block;padding-left:100vw;
+}
+.home-label .name{
+  font-family:var(--mono);font-size:13px;color:#555;letter-spacing:.06em;
+}
+.home-label .roles{
+  font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;
+}
+.home-label .roles .sep{margin:0 10px;color:var(--faint);}
+@keyframes ticker-rtl{
+  0%  { transform: translateX(0); }
+  100%{ transform: translateX(-100%); }
+}
+.home-arrow{position:relative;z-index:2;display:flex;justify-content:center;padding-bottom:28px;}
+.arrow-btn{width:42px;height:42px;border-radius:50%;border:1px solid #999;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s;}
+.arrow-btn:hover{border-color:var(--ink);}
+.arrow-btn svg{width:13px;height:13px;stroke:#666;stroke-width:1.5;fill:none;}
+
+/* WORKS */
+#works{padding:88px 0 100px;}
+.w-header{padding:0 36px;margin-bottom:24px;}
+.w-title{font-size:13px;color:var(--ink);margin-bottom:10px;}
+.w-concept{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.75;max-width:620px;}
+.lay-full img{height:380px;object-fit:cover;width:100%;display:block;}
+.lay-1-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;}
+.lay-1-3 img{height:240px;object-fit:cover;width:100%;display:block;}
+.lay-2{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.lay-2 img{height:280px;object-fit:cover;width:100%;display:block;}
+.lay-2-split{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.lay-2-split img{height:320px;object-fit:cover;width:100%;display:block;}
+.spacer{height:4px;}
+
+/* CV */
+#cv{padding:88px 36px 100px;}
+.cv-section-label{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.18em;text-transform:lowercase;margin-bottom:36px;}
+.cv-row{display:grid;grid-template-columns:180px 1fr;gap:0 56px;margin-bottom:48px;}
+.cv-co{font-size:14px;color:var(--ink);margin-bottom:3px;}
+.cv-loc{font-size:11px;color:var(--muted);margin-bottom:2px;}
+.cv-yr{font-size:11px;color:var(--faint);}
+.cv-role{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.08em;margin-bottom:10px;}
+.cv-pts{list-style:none;}
+.cv-pts li{font-size:13px;color:#666;line-height:1.85;padding-left:12px;position:relative;}
+.cv-pts li::before{content:"–";position:absolute;left:0;color:#ccc;}
+.cv-rule{border:none;border-top:1px solid #d8d8d8;margin:0 0 48px 236px;}
+.cv-block-gap{height:56px;}
+.cv-deg{font-size:13px;color:#444;margin-bottom:4px;}
+.cv-note{font-size:12px;color:var(--muted);line-height:1.7;}
+
+/* ABOUT */
+#about{padding:88px 36px 100px;}
+.about-inner{max-width:520px;}
+.about-hello{font-family:var(--mono);font-size:13px;color:var(--ink);margin-bottom:6px;}
+.about-name{font-family:var(--mono);font-size:13px;color:var(--ink);margin-bottom:36px;}
+.about-name span{font-weight:400;}
+.about-bio{font-family:var(--mono);font-size:12px;color:#555;line-height:2;margin-bottom:36px;}
+.about-skills{display:flex;flex-direction:column;gap:4px;margin-bottom:40px;}
+.about-skills span{font-family:var(--mono);font-size:12px;color:var(--ink);font-weight:400;}
+.about-contact{display:flex;flex-direction:column;gap:9px;}
+.about-contact a{font-size:12px;color:var(--muted);text-decoration:none;font-family:var(--mono);}
+.about-contact a:hover{color:var(--ink);}
+.about-contact span{font-size:11px;color:var(--faint);font-family:var(--mono);}
+
+/* LIGHTBOX */
+.lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:999;align-items:center;justify-content:center;}
+.lb.on{display:flex;}
+.lb img{max-height:85vh;max-width:85vw;object-fit:contain;}
+.lb-x{position:absolute;top:24px;right:32px;color:#777;font-size:22px;cursor:pointer;background:none;border:none;font-family:var(--sans);}
+.lb-x:hover{color:#fff;}
+.lb-p,.lb-n{position:absolute;top:50%;transform:translateY(-50%);color:#666;font-size:32px;cursor:pointer;background:none;border:none;padding:16px;}
+.lb-p:hover,.lb-n:hover{color:#fff;}
+.lb-p{left:8px;}.lb-n{right:8px;}
+.lb-c{position:absolute;bottom:24px;font-size:11px;color:#555;font-family:var(--mono);letter-spacing:.1em;}
+
+@media(max-width:640px){
+  .nav{padding:18px 20px;}
+  .nav-mid{top:18px;}
+  .home-label .roles{font-size:9px;}
+  .home-label .roles .sep{margin:0 5px;}
+  #works{padding:72px 0 80px;}
+  .w-header{padding:0 20px;}
+  #cv,#about{padding:72px 20px 80px;}
+  .cv-row{grid-template-columns:1fr;gap:6px 0;}
+  .cv-rule{margin-left:0;}
+  .lay-full img{height:220px;}
+  .lay-1-3 img{height:120px;}
+  .lay-2 img,.lay-2-split img{height:160px;}
+}
+
+/* CURSOR */
+body { cursor: none; }
+a, button, [onclick] { cursor: none; }
+.cur-dot {
+  position: fixed; width: 6px; height: 6px;
+  background: #111; border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
+}
+.cur-ring {
+  position: fixed; width: 30px; height: 30px;
+  border: 1px solid rgba(17,17,17,0.3); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: width 0.22s ease, height 0.22s ease, border-color 0.22s ease;
+}
+.cur-trail {
+  position: fixed; border-radius: 50%;
+  pointer-events: none; z-index: 9997;
+  transform: translate(-50%,-50%);
+  background: #111;
+}
+body.cur-hover .cur-dot { width: 9px; height: 9px; background: #444; }
+body.cur-hover .cur-ring { width: 54px; height: 54px; border-color: rgba(17,17,17,0.12); }
+
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <button onclick="go('home')">zhengzheng li</button>
+  <button onclick="go('about')">about</button>
+</nav>
+<div class="nav-mid">
+  <button id="nb-works" onclick="go('works')">works</button>
+  <button id="nb-cv" onclick="go('cv')">cv</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="page on">
+  <img class="home-bg" src="images/img_00.jpg" alt="">
+  <div class="home-label">
+    <div class="ticker-track">
+      <div class="ticker-item"><span class="name">zhengzheng li</span></div>
+    </div>
+    <div class="ticker-track slow">
+      <div class="ticker-item"><span class="roles">designer<span class="sep">-</span>fashion stylist<span class="sep">-</span>art director</span></div>
+    </div>
+  </div>
+  <div class="home-arrow">
+    <button class="arrow-btn" onclick="go('works')">
+      <svg viewBox="0 0 13 13"><line x1="6.5" y1="1" x2="6.5" y2="12"/><polyline points="3,8.5 6.5,12 10,8.5"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- WORKS — single merged series -->
+<div id="works" class="page">
+
+  <div class="w-header">
+    <div class="w-title">the wanderer</div>
+    <div class="w-concept">a young man moves through golden fields, bare stone walls, and empty institutional corridors — each space a different kind of silence. the clothes he wears are never costumes; they are skins. layered, architectural, sometimes dissolving into the landscape, sometimes standing apart from it. the shoot moves between colour and monochrome, between closeness and distance, tracing the quiet tension between who we are and where we find ourselves. nature does not frame him — it reads him.</div>
+  </div>
+
+  <div onclick="openLb('all')" style="cursor:pointer;">
+    <div class="lay-full"><img src="images/img_01.jpg" style="height:420px;width:100%;display:block;object-fit:cover;"></div>
+    <div class="spacer"></div>
+    <div class="lay-1-3">
+      <img src="images/img_02.jpg" style="width:100%;display:block;object-fit:cover;">
+      <img src="images/img_03.jpg" style="width:100%;display:block;object-fit:cover;">
+      <img src="images/img_04.jpg" style="width:100%;display:block;object-fit:cover;">
+    </div>
+    <div class="spacer"></div>
+    <div class="lay-2">
+      <img src="images/img_05.jpg" style="width:100%;display:block;object-fit:cover;">
+      <img src="images/img_06.jpg" style="width:100%;display:block;object-fit:cover;">
+    </div>
+    <div class="spacer"></div>
+    <div class="lay-2-split">
+      <img src="images/img_07.jpg" style="width:100%;display:block;object-fit:cover;">
+      <img src="images/img_08.jpg" style="width:100%;display:block;object-fit:cover;">
+    </div>
+    <div class="spacer"></div>
+    <div class="lay-2-split">
+      <img src="images/img_09.jpg" style="width:100%;display:block;object-fit:cover;">
+      <img src="images/img_10.jpg" style="width:100%;display:block;object-fit:cover;">
+    </div>
+  </div>
+
+</div>
+
+<!-- CV -->
+<div id="cv" class="page">
+
+  <div class="cv-section-label">experience</div>
+
+  <div class="cv-row">
+    <div><div class="cv-co">maxmara</div><div class="cv-loc">düsseldorf</div><div class="cv-yr">2025 — present</div></div>
+    <div>
+      <div class="cv-role">client advisor</div>
+      <ul class="cv-pts">
+        <li>provide personalised styling advice and build lasting client relationships in a luxury retail environment</li>
+        <li>develop new clientele and nurture ongoing relationships through proactive crm</li>
+        <li>oversee daily operations including till management, visual merchandising and stockroom</li>
+      </ul>
+    </div>
+  </div>
+  <hr class="cv-rule">
+
+  <div class="cv-row">
+    <div><div class="cv-co">esprit</div><div class="cv-loc">düsseldorf</div><div class="cv-yr">2016 — 2024</div></div>
+    <div>
+      <div class="cv-role">senior stylist — b2c photostudio</div>
+      <ul class="cv-pts">
+        <li>led creative direction for ecom and campaign shoots, translating brand strategy into compelling visual narratives</li>
+        <li>managed end-to-end shoot production — casting, hair and makeup briefing, wardrobe curation and final image selection</li>
+        <li>built and maintained strong working relationships with freelance talent and cross-functional internal teams</li>
+      </ul>
+    </div>
+  </div>
+  <hr class="cv-rule">
+
+  <div class="cv-row">
+    <div><div class="cv-co">esprit</div><div class="cv-loc">düsseldorf</div><div class="cv-yr">2019 — 2024</div></div>
+    <div>
+      <div class="cv-role">senior stylist — b2b wholesale</div>
+      <ul class="cv-pts">
+        <li>oversaw multiple concurrent projects, balancing timelines, resources and budgets across wholesale productions</li>
+        <li>collaborated closely with product teams to develop shoot concepts aligned with commercial objectives</li>
+        <li>directed freelance crews through full production cycles, from concept to post-production sign-off</li>
+      </ul>
+    </div>
+  </div>
+  <hr class="cv-rule">
+
+  <div class="cv-row">
+    <div><div class="cv-co">wiethe objectiv</div><div class="cv-loc">bremen</div><div class="cv-yr">2013 — 2015</div></div>
+    <div>
+      <div class="cv-role">fashion stylist</div>
+      <ul class="cv-pts">
+        <li>styled across e-commerce, campaign and flat-lay formats, adapting aesthetic approach to each brief</li>
+        <li>crafted visual stories that balanced product integrity with strong brand identity</li>
+      </ul>
+    </div>
+  </div>
+  <hr class="cv-rule">
+
+  <div class="cv-row">
+    <div><div class="cv-co">gaspard yurkievich</div><div class="cv-loc">paris</div><div class="cv-yr">2007 — 2009</div></div>
+    <div>
+      <div class="cv-role">fashion designer</div>
+      <ul class="cv-pts">
+        <li>contributed to seasonal collections presented at paris fashion week — from initial research and sketching through to prototype review</li>
+        <li>supported casting, fittings and showroom operations alongside the creative team</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cv-block-gap"></div>
+  <div class="cv-section-label">education</div>
+
+  <div class="cv-row">
+    <div><div class="cv-co">artez university of the arts</div><div class="cv-loc">arnhem, netherlands</div><div class="cv-yr">2009 — 2011</div></div>
+    <div><div class="cv-deg">master of fashion design</div><div class="cv-note">branding · fashion analysis · social forecasting · fashion theory</div></div>
+  </div>
+  <hr class="cv-rule">
+  <div class="cv-row">
+    <div><div class="cv-co">mod'art international</div><div class="cv-loc">paris, france</div><div class="cv-yr">2008 — 2009</div></div>
+    <div><div class="cv-deg">fashion management</div><div class="cv-note">fashion marketing · visual communication · trend forecasting</div></div>
+  </div>
+  <hr class="cv-rule">
+  <div class="cv-row">
+    <div><div class="cv-co">esmod</div><div class="cv-loc">paris, france</div><div class="cv-yr">2004 — 2007</div></div>
+    <div><div class="cv-deg">bachelor of fashion design &amp; pattern drafting</div><div class="cv-note">pattern drafting · textile · art history · fashion illustration</div></div>
+  </div>
+
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="page">
+  <div class="about-inner">
+    <div class="about-hello">hello</div>
+    <div class="about-name">i am <span>zheng zheng</span></div>
+    <div class="about-bio">i am a <strong>fashion designer</strong> and <strong>art director</strong> with a deep passion for photography, travel, and visual storytelling. my work is driven by a fascination with the narratives behind images — the emotions, the journeys, and the authenticity they hold.<br><br>i believe that true stories, even if imperfect, carry a unique beauty that resonates more deeply than polished illusions. through design, styling, and imagery, i strive to create and capture moments that reflect this honesty, blending aesthetics with meaning to connect people through visual experiences.</div>
+    <div class="about-skills">
+      <span>art direction</span>
+      <span>visual communication</span>
+      <span>fashion styling</span>
+      <span>photography</span>
+    </div>
+    <div class="about-contact">
+      <a href="mailto:zhengzheng.li@live.com">zhengzheng.li@live.com</a>
+      <a href="tel:+4917643835857">+49 176 438 35857</a>
+      <span>düsseldorf, germany</span>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb">
+  <button class="lb-x" onclick="lbClose()">×</button>
+  <button class="lb-p" onclick="lbMove(-1)">&#8249;</button>
+  <img id="lb-img" src="" alt="">
+  <div class="lb-c" id="lb-c"></div>
+  <button class="lb-n" onclick="lbMove(1)">&#8250;</button>
+</div>
+
+<script>
+const allPages = ['home','works','cv','about'];
+const nbMap = {works:'nb-works', cv:'nb-cv'};
+function go(id){
+  allPages.forEach(p=>{const e=document.getElementById(p);if(e)e.classList.remove('on');});
+  Object.values(nbMap).forEach(n=>{const e=document.getElementById(n);if(e)e.classList.remove('on');});
+  const t=document.getElementById(id);if(t)t.classList.add('on');
+  if(nbMap[id])document.getElementById(nbMap[id]).classList.add('on');
+  window.scrollTo(0,0);
+}
+
+let lbCur=[], lbIdx=0;
+function openLb(id){
+  const wrap=document.querySelector('[onclick="openLb(\''+id+'\')"]');
+  if(!wrap)return;
+  lbCur=Array.from(wrap.querySelectorAll('img')).map(i=>i.src);
+  lbIdx=0; renderLb();
+  document.getElementById('lb').classList.add('on');
+}
+function renderLb(){
+  document.getElementById('lb-img').src=lbCur[lbIdx];
+  document.getElementById('lb-c').textContent=(lbIdx+1)+' / '+lbCur.length;
+}
+function lbMove(d){lbIdx=(lbIdx+d+lbCur.length)%lbCur.length;renderLb();}
+function lbClose(){document.getElementById('lb').classList.remove('on');}
+document.getElementById('lb').addEventListener('click',e=>{if(e.target===document.getElementById('lb'))lbClose();});
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('lb').classList.contains('on'))return;
+  if(e.key==='ArrowRight')lbMove(1);
+  else if(e.key==='ArrowLeft')lbMove(-1);
+  else if(e.key==='Escape')lbClose();
+});
+</script>
+
+<div class="cur-dot" id="cDot"></div>
+<div class="cur-ring" id="cRing"></div>
+<script>
+(function(){
+  const dot = document.getElementById('cDot');
+  const ring = document.getElementById('cRing');
+  let mx=window.innerWidth/2, my=window.innerHeight/2;
+  let rx=mx, ry=my;
+  const N=8;
+  const tPos = Array.from({length:N},()=>({x:mx,y:my}));
+  const tEls = Array.from({length:N},(_,i)=>{
+    const d=document.createElement('div');
+    d.className='cur-trail';
+    const s=3.5-i*0.35;
+    d.style.width=d.style.height=s+'px';
+    d.style.opacity=(0.18-i*0.018);
+    document.body.appendChild(d);
+    return d;
+  });
+
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+
+  document.addEventListener('mouseover',e=>{
+    if(e.target.closest('button,a,[onclick]'))document.body.classList.add('cur-hover');
+  });
+  document.addEventListener('mouseout',e=>{
+    if(e.target.closest('button,a,[onclick]'))document.body.classList.remove('cur-hover');
+  });
+
+  document.addEventListener('click',e=>{
+    const r=document.createElement('div');
+    r.style.cssText='position:fixed;border-radius:50%;border:1px solid rgba(17,17,17,0.3);'+
+      'pointer-events:none;z-index:9996;transform:translate(-50%,-50%) scale(1);'+
+      'transition:transform 0.55s ease,opacity 0.55s ease;opacity:1;'+
+      'width:10px;height:10px;left:'+e.clientX+'px;top:'+e.clientY+'px;';
+    document.body.appendChild(r);
+    requestAnimationFrame(()=>{r.style.transform='translate(-50%,-50%) scale(8)';r.style.opacity='0';});
+    setTimeout(()=>r.remove(),600);
+  });
+
+  function tick(){
+    dot.style.left=mx+'px'; dot.style.top=my+'px';
+    rx+=(mx-rx)*0.13; ry+=(my-ry)*0.13;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    tPos[0].x+=(mx-tPos[0].x)*0.28; tPos[0].y+=(my-tPos[0].y)*0.28;
+    for(let i=1;i<N;i++){
+      tPos[i].x+=(tPos[i-1].x-tPos[i].x)*0.38;
+      tPos[i].y+=(tPos[i-1].y-tPos[i].y)*0.38;
+    }
+    tEls.forEach((el,i)=>{el.style.left=tPos[i].x+'px';el.style.top=tPos[i].y+'px';});
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
+
+</body>
+</html>
