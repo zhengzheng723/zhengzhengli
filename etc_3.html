@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>et cetera — zhengzheng li</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#ebebeb;
+  --ink:#111;
+  --muted:#888;
+  --faint:#ccc;
+  --mono:"DM Mono",monospace;
+  --sans:"DM Sans",sans-serif;
+}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;min-height:100vh;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:22px 36px;z-index:100;
+}
+.nav-center{
+  font-family:var(--mono);font-size:11px;
+  color:var(--muted);letter-spacing:.08em;
+}
+
+/* GRID */
+.grid{
+  padding:90px 2px 120px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;
+}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.grid{grid-template-columns:1fr;padding:80px 2px 80px;}}
+
+.grid-item{
+  position:relative;overflow:hidden;cursor:pointer;
+  background:#d8d8d6;
+  aspect-ratio:1/1;
+}
+.grid-item img{
+  display:block;width:100%;height:100%;
+  object-fit:cover;
+  transition:opacity .35s ease,transform .5s ease;
+}
+.grid-item:hover img{opacity:.85;transform:scale(1.04);}
+.grid-item .caption{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:10px 12px;
+  background:linear-gradient(transparent,rgba(0,0,0,.3));
+  font-family:var(--mono);font-size:9px;color:white;letter-spacing:.1em;
+  opacity:0;transform:translateY(4px);
+  transition:opacity .25s ease,transform .25s ease;
+}
+.grid-item:hover .caption{opacity:1;transform:translateY(0);}
+.placeholder{
+  width:100%;height:100%;background:#e2e2e0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:.1em;
+}
+
+/* LIGHTBOX */
+.lb{
+  display:none;position:fixed;inset:0;
+  background:rgba(235,235,235,.96);
+  z-index:500;align-items:center;justify-content:center;flex-direction:column;
+}
+.lb.on{display:flex;}
+.lb img{max-width:82vw;max-height:80vh;object-fit:contain;display:block;}
+.lb-meta{
+  margin-top:18px;font-family:var(--mono);
+  font-size:10px;color:var(--muted);letter-spacing:.1em;text-align:center;
+}
+.lb-close-wrap{
+  position:fixed;top:22px;right:36px;
+  cursor:pointer;
+}
+.lb-nav{
+  position:fixed;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:13px;color:var(--muted);
+  cursor:pointer;background:none;border:none;
+  padding:20px;transition:color .2s;letter-spacing:.06em;user-select:none;
+}
+.lb-nav:hover{color:var(--ink);}
+.lb-nav.prev{left:20px;}
+.lb-nav.next{right:20px;}
+
+/* TICKER */
+.ticker-wrap{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  overflow:hidden;
+  z-index:50;
+  padding:18px 0;
+  pointer-events:none;
+}
+.ticker-track{
+  display:flex;white-space:nowrap;
+  animation:ticker-rtl 36s linear infinite;
+}
+.ticker-item{
+  display:inline-block;
+  padding-left:100vw;
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:.08em;
+  font-style:italic;
+}
+/* left fade mask */
+.ticker-wrap::before{
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:200px;
+  background:linear-gradient(to right, var(--bg) 20%, transparent 100%);
+  z-index:2;
+  pointer-events:none;
+}
+@keyframes ticker-rtl{
+  0%  {transform:translateX(0);}
+  100%{transform:translateX(-100%);}
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <!-- creature logo — click to go home, blinks eyes -->
+  <div id="etcLogo" onclick="window.location.href='index.html'" style="cursor:pointer;">
+<svg id="etcLogoSvg" viewBox="0 0 160 130" width="60" height="49"
+  style="cursor:pointer;display:block;overflow:visible;"
+  xmlns="http://www.w3.org/2000/svg">
+  <circle cx="58" cy="8" r="12" fill="#111"/>
+  <circle cx="72" cy="3" r="8" fill="#111"/>
+  <circle cx="81" cy="7" r="14" fill="#111"/>
+  <circle cx="95" cy="4" r="7" fill="#111"/>
+  <circle cx="103" cy="10" r="11" fill="#111"/>
+  <circle cx="47" cy="12" r="7" fill="#111"/>
+  <circle cx="38" cy="17" r="10" fill="#111"/>
+  <circle cx="113" cy="18" r="9" fill="#111"/>
+  <circle cx="120" cy="28" r="12" fill="#111"/>
+  <circle cx="126" cy="40" r="8" fill="#111"/>
+  <circle cx="124" cy="52" r="13" fill="#111"/>
+  <circle cx="119" cy="65" r="7" fill="#111"/>
+  <circle cx="118" cy="75" r="11" fill="#111"/>
+  <circle cx="113" cy="86" r="8" fill="#111"/>
+  <circle cx="104" cy="95" r="12" fill="#111"/>
+  <circle cx="91" cy="101" r="9" fill="#111"/>
+  <circle cx="78" cy="104" r="13" fill="#111"/>
+  <circle cx="64" cy="102" r="8" fill="#111"/>
+  <circle cx="51" cy="97" r="11" fill="#111"/>
+  <circle cx="40" cy="89" r="7" fill="#111"/>
+  <circle cx="30" cy="78" r="13" fill="#111"/>
+  <circle cx="24" cy="65" r="7" fill="#111"/>
+  <circle cx="22" cy="52" r="12" fill="#111"/>
+  <circle cx="26" cy="38" r="8" fill="#111"/>
+  <circle cx="31" cy="27" r="11" fill="#111"/>
+  <ellipse cx="76" cy="-4" rx="5" ry="10" fill="#111" transform="rotate(-15 76 -4)"/>
+  <ellipse cx="130" cy="58" rx="10" ry="5" fill="#111" transform="rotate(10 130 58)"/>
+  <ellipse cx="18" cy="55" rx="10" ry="4" fill="#111" transform="rotate(-8 18 55)"/>
+  <ellipse cx="76" cy="112" rx="5" ry="9" fill="#111" transform="rotate(8 76 112)"/>
+  <ellipse cx="76" cy="54" rx="54" ry="52" fill="#111"/>
+  <!-- large eye -->
+  <circle cx="56" cy="50" r="17" fill="white"/>
+  <circle id="elp1" cx="56" cy="50" r="11" fill="#111"/>
+  <circle id="elh1" cx="50" cy="44" r="3.5" fill="white"/>
+  <!-- small eye top-right -->
+  <circle cx="97" cy="37" r="9" fill="white"/>
+  <circle id="elp2" cx="97" cy="37" r="6" fill="#111"/>
+  <circle id="elh2" cx="93" cy="33" r="1.5" fill="white"/>
+  <!-- medium eye bottom-right -->
+  <circle cx="93" cy="65" r="12" fill="white"/>
+  <circle id="elp3" cx="93" cy="65" r="5" fill="#111"/>
+  <circle id="elh3" cx="91" cy="63" r="1.5" fill="white"/>
+</svg>
+  </div>
+  <span class="nav-center">et cetera</span>
+  <span style="width:60px;"></span>
+</nav>
+
+<div class="grid" id="photoGrid">
+  <!--
+    HOW TO ADD YOUR PHOTOS:
+    Replace each placeholder div with:
+    <div class="grid-item" onclick="openLb(N)">
+      <img src="photos/your-image.jpg" alt="">
+      <div class="caption">caption text</div>
+    </div>
+
+    Upload your images to a "photos" folder in your GitHub repo.
+    N = the index number starting from 0.
+  -->
+  <div class="grid-item" onclick="openLb(0)">
+    <div class="placeholder" >add image 01</div>
+    <div class="caption">01</div>
+  </div>
+  <div class="grid-item" onclick="openLb(1)">
+    <div class="placeholder" >add image 02</div>
+    <div class="caption">02</div>
+  </div>
+  <div class="grid-item" onclick="openLb(2)">
+    <div class="placeholder" >add image 03</div>
+    <div class="caption">03</div>
+  </div>
+  <div class="grid-item" onclick="openLb(3)">
+    <div class="placeholder" >add image 04</div>
+    <div class="caption">04</div>
+  </div>
+  <div class="grid-item" onclick="openLb(4)">
+    <div class="placeholder" >add image 05</div>
+    <div class="caption">05</div>
+  </div>
+  <div class="grid-item" onclick="openLb(5)">
+    <div class="placeholder" >add image 06</div>
+    <div class="caption">06</div>
+  </div>
+  <div class="grid-item" onclick="openLb(6)">
+    <div class="placeholder" >add image 07</div>
+    <div class="caption">07</div>
+  </div>
+  <div class="grid-item" onclick="openLb(7)">
+    <div class="placeholder" >add image 08</div>
+    <div class="caption">08</div>
+  </div>
+  <div class="grid-item" onclick="openLb(8)">
+    <div class="placeholder" >add image 09</div>
+    <div class="caption">09</div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb">
+  <div class="lb-close-wrap" id="lbCloseBtn" onclick="closeLb()">
+<svg id="closeCreature" viewBox="0 0 160 130" width="44" height="36"
+  style="cursor:pointer;display:block;overflow:visible;"
+  xmlns="http://www.w3.org/2000/svg">
+  <circle cx="58" cy="8" r="12" fill="#111"/>
+  <circle cx="81" cy="7" r="14" fill="#111"/>
+  <circle cx="103" cy="10" r="11" fill="#111"/>
+  <circle cx="38" cy="17" r="10" fill="#111"/>
+  <circle cx="120" cy="28" r="12" fill="#111"/>
+  <circle cx="124" cy="52" r="13" fill="#111"/>
+  <circle cx="118" cy="75" r="11" fill="#111"/>
+  <circle cx="104" cy="95" r="12" fill="#111"/>
+  <circle cx="78" cy="104" r="13" fill="#111"/>
+  <circle cx="51" cy="97" r="11" fill="#111"/>
+  <circle cx="30" cy="78" r="13" fill="#111"/>
+  <circle cx="22" cy="52" r="12" fill="#111"/>
+  <circle cx="31" cy="27" r="11" fill="#111"/>
+  <ellipse cx="76" cy="-4" rx="5" ry="10" fill="#111" transform="rotate(-15 76 -4)"/>
+  <ellipse cx="130" cy="58" rx="10" ry="5" fill="#111" transform="rotate(10 130 58)"/>
+  <ellipse cx="18" cy="55" rx="10" ry="4" fill="#111" transform="rotate(-8 18 55)"/>
+  <ellipse cx="76" cy="112" rx="5" ry="9" fill="#111" transform="rotate(8 76 112)"/>
+  <ellipse cx="76" cy="54" rx="54" ry="52" fill="#111"/>
+  <circle cx="56" cy="50" r="17" fill="white"/>
+  <circle id="clp1" cx="56" cy="50" r="11" fill="#111"/>
+  <circle id="clh1" cx="50" cy="44" r="3.5" fill="white"/>
+  <circle cx="97" cy="37" r="9" fill="white"/>
+  <circle id="clp2" cx="97" cy="37" r="6" fill="#111"/>
+  <circle id="clh2" cx="93" cy="33" r="1.5" fill="white"/>
+  <circle cx="93" cy="65" r="12" fill="white"/>
+  <circle id="clp3" cx="93" cy="65" r="5" fill="#111"/>
+  <circle id="clh3" cx="91" cy="63" r="1.5" fill="white"/>
+</svg>
+  </div>
+  <button class="lb-nav prev" onclick="navLb(-1)">←</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-meta" id="lbMeta"></div>
+  <button class="lb-nav next" onclick="navLb(1)">→</button>
+</div>
+
+<script>
+// ── NAV CREATURE EYE TRACKING ──
+const etcEyes = [
+  {pid:'elp1',hid:'elh1',cx:56,cy:50,maxR:4,hox:-6,hoy:-6},
+  {pid:'elp2',hid:'elh2',cx:97,cy:37,maxR:2,hox:-4,hoy:-4},
+  {pid:'elp3',hid:'elh3',cx:93,cy:65,maxR:2,hox:-2,hoy:-2},
+];
+
+document.addEventListener('mousemove', e => {
+  const svg = document.getElementById('etcLogoSvg');
+  if(!svg) return;
+  const rect = svg.getBoundingClientRect();
+  const scaleX = 160/rect.width, scaleY = 130/rect.height;
+  const mx = (e.clientX - rect.left)*scaleX;
+  const my = (e.clientY - rect.top)*scaleY;
+  etcEyes.forEach(eye => {
+    const p = document.getElementById(eye.pid);
+    const h = document.getElementById(eye.hid);
+    if(!p||!h) return;
+    const dx=mx-eye.cx, dy=my-eye.cy;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const move=Math.min(dist*0.15,eye.maxR);
+    const nx=dist>0?(dx/dist)*move:0;
+    const ny=dist>0?(dy/dist)*move:0;
+    p.setAttribute('cx',(eye.cx+nx).toFixed(2));
+    p.setAttribute('cy',(eye.cy+ny).toFixed(2));
+    h.setAttribute('cx',(eye.cx+nx+eye.hox).toFixed(2));
+    h.setAttribute('cy',(eye.cy+ny+eye.hoy).toFixed(2));
+  });
+});
+
+// ── NAV CREATURE BLINK ──
+function blink(pid, hid){
+  const p = document.getElementById(pid);
+  if(!p) return;
+  const origR = p.getAttribute('r');
+  p.setAttribute('r','0.5');
+  setTimeout(()=>p.setAttribute('r', origR), 120);
+}
+function randomBlink(){
+  const eyes = [['elp1','elh1'],['elp2','elh2'],['elp3','elh3']];
+  const [pid,hid] = eyes[Math.floor(Math.random()*eyes.length)];
+  blink(pid,hid);
+  setTimeout(randomBlink, 2000 + Math.random()*3000);
+}
+randomBlink();
+
+// ── CLOSE CREATURE SPIN ──
+let closeRot = 0;
+const closeCreature = document.getElementById('closeCreature');
+function spinClose(){
+  closeRot += 1.5;
+  if(closeCreature) closeCreature.style.transform = `rotate(${closeRot}deg)`;
+  requestAnimationFrame(spinClose);
+}
+spinClose();
+
+// ── CLOSE CREATURE EYE TRACKING ──
+const closeEyes = [
+  {pid:'clp1',hid:'clh1',cx:56,cy:50,maxR:4,hox:-6,hoy:-6},
+  {pid:'clp2',hid:'clh2',cx:97,cy:37,maxR:2,hox:-4,hoy:-4},
+  {pid:'clp3',hid:'clh3',cx:93,cy:65,maxR:2,hox:-2,hoy:-2},
+];
+document.addEventListener('mousemove', e => {
+  const svg = document.getElementById('closeCreature');
+  if(!svg) return;
+  const rect = svg.getBoundingClientRect();
+  const scaleX = 160/rect.width, scaleY = 130/rect.height;
+  const mx = (e.clientX-rect.left)*scaleX;
+  const my = (e.clientY-rect.top)*scaleY;
+  closeEyes.forEach(eye=>{
+    const p=document.getElementById(eye.pid);
+    const h=document.getElementById(eye.hid);
+    if(!p||!h) return;
+    const dx=mx-eye.cx, dy=my-eye.cy;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const move=Math.min(dist*0.15,eye.maxR);
+    const nx=dist>0?(dx/dist)*move:0;
+    const ny=dist>0?(dy/dist)*move:0;
+    p.setAttribute('cx',(eye.cx+nx).toFixed(2));
+    p.setAttribute('cy',(eye.cy+ny).toFixed(2));
+    h.setAttribute('cx',(eye.cx+nx+eye.hox).toFixed(2));
+    h.setAttribute('cy',(eye.cy+ny+eye.hoy).toFixed(2));
+  });
+});
+
+// ── LIGHTBOX ──
+const items = document.querySelectorAll('.grid-item');
+let cur = 0;
+
+function openLb(idx){
+  cur=idx; renderLb();
+  document.getElementById('lb').classList.add('on');
+}
+function closeLb(){
+  document.getElementById('lb').classList.remove('on');
+}
+function navLb(dir){
+  cur=(cur+dir+items.length)%items.length;
+  renderLb();
+}
+function renderLb(){
+  const item=items[cur];
+  const img=item.querySelector('img');
+  const cap=item.querySelector('.caption');
+  const lbImg=document.getElementById('lbImg');
+  if(img){lbImg.src=img.src;lbImg.style.display='block';}
+  else{lbImg.src='';lbImg.style.display='none';}
+  document.getElementById('lbMeta').textContent=
+    (cap?cap.textContent.trim():'')+' — '+(cur+1)+' / '+items.length;
+}
+
+document.addEventListener('keydown',e=>{
+  const lb=document.getElementById('lb');
+  if(!lb.classList.contains('on')) return;
+  if(e.key==='ArrowRight') navLb(1);
+  if(e.key==='ArrowLeft') navLb(-1);
+  if(e.key==='Escape') closeLb();
+});
+document.getElementById('lb').addEventListener('click',function(e){
+  if(e.target===this) closeLb();
+});
+</script>
+
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="word">"I</span> <span class="word">will</span> <span class="word">see</span> <span class="word">you</span> <span class="word">down</span> <span class="word">the</span> <span class="word">road."</span></div>
+  </div>
+</div>
+
+<script>
+// ── TICKER WORD FADE ──
+(function(){
+  const track = document.querySelector('.ticker-track');
+  const words = document.querySelectorAll('.ticker-item .word');
+  const FADE_ZONE = 200;
+  function updateFade(){
+    words.forEach(w => {
+      const rect = w.getBoundingClientRect();
+      if(rect.right < 0){
+        w.style.opacity = '0';
+      } else if(rect.left < FADE_ZONE){
+        w.style.opacity = Math.max(0, rect.left/FADE_ZONE).toFixed(3);
+      } else {
+        w.style.opacity = '1';
+      }
+    });
+    requestAnimationFrame(updateFade);
+  }
+  updateFade();
+})();
+</script>
+
+</body>
+</html>
