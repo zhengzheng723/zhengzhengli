@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>et cetera — zhengzheng li</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#ebebeb;
+  --ink:#111;
+  --muted:#888;
+  --faint:#ccc;
+  --mono:"DM Mono",monospace;
+  --sans:"DM Sans",sans-serif;
+}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;min-height:100vh;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:22px 36px;z-index:100;
+}
+.nav-center{
+  position:fixed;
+  top:28px;
+  left:50%;
+  transform:translateX(-50%);
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--ink);
+  letter-spacing:.1em;
+  z-index:100;
+}
+
+/* GRID */
+.grid{
+  padding:110px 2px 120px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;
+}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.grid{grid-template-columns:1fr;padding:80px 2px 80px;}}
+
+.grid-item{
+  position:relative;overflow:hidden;cursor:pointer;
+  background:#d8d8d6;
+  aspect-ratio:1/1;
+}
+.grid-item img{
+  display:block;width:100%;height:100%;
+  object-fit:cover;
+  transition:opacity .35s ease,transform .5s ease;
+}
+.grid-item:hover img{opacity:.85;transform:scale(1.04);}
+.grid-item .caption{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:10px 12px;
+  background:linear-gradient(transparent,rgba(0,0,0,.3));
+  font-family:var(--mono);font-size:9px;color:white;letter-spacing:.1em;
+  opacity:0;transform:translateY(4px);
+  transition:opacity .25s ease,transform .25s ease;
+}
+.grid-item:hover .caption{opacity:1;transform:translateY(0);}
+.placeholder{
+  width:100%;height:100%;background:#e2e2e0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:9px;color:var(--faint);letter-spacing:.1em;
+}
+
+/* LIGHTBOX */
+.lb{
+  display:none;position:fixed;inset:0;
+  background:rgba(235,235,235,.96);
+  z-index:500;align-items:center;justify-content:center;flex-direction:column;
+}
+.lb.on{display:flex;}
+.lb img{max-width:82vw;max-height:80vh;object-fit:contain;display:block;}
+.lb-meta{
+  margin-top:18px;font-family:var(--mono);
+  font-size:10px;color:var(--muted);letter-spacing:.1em;text-align:center;
+}
+.lb-close-wrap{
+  position:fixed;top:22px;right:36px;
+  cursor:pointer;
+}
+.lb-nav{
+  position:fixed;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:13px;color:var(--muted);
+  cursor:pointer;background:none;border:none;
+  padding:20px;transition:color .2s;letter-spacing:.06em;user-select:none;
+}
+.lb-nav:hover{color:var(--ink);}
+.lb-nav.prev{left:20px;}
+.lb-nav.next{right:20px;}
+
+/* TICKER */
+.ticker-wrap{
+  position:fixed;
+  top:52px;
+  left:0;right:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:99;
+}
+.ticker-track{
+  display:flex;white-space:nowrap;
+  animation:ticker-rtl 36s linear infinite;
+}
+.ticker-track{
+  display:flex;white-space:nowrap;
+  animation:ticker-rtl 34s linear infinite;
+}
+.ticker-item{
+  display:inline-block;
+  padding-left:100vw;
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--muted);
+  letter-spacing:.06em;
+  font-style:italic;
+}
+/* left fade */
+.ticker-wrap::before{
+  content:"";
+  position:absolute;left:0;top:0;bottom:0;
+  width:180px;
+  background:linear-gradient(to right,var(--bg) 20%,transparent 100%);
+  z-index:2;pointer-events:none;
+}
+
+@keyframes ticker-rtl{
+  0%  {transform:translateX(0);}
+  100%{transform:translateX(-100%);}
+}
+
+</style>
+</head>
+<body>
+
+<nav style="pointer-events:none;">
+  <!-- creature logo — floating, click to go home -->
+  <div id="etcLogo" onclick="explodeAndGo('index.html', event)" style="cursor:pointer;pointer-events:all;position:fixed;left:36px;top:22px;z-index:200;">
+<svg id="etcLogoSvg" viewBox="0 0 160 130" width="60" height="49"
+  style="cursor:pointer;display:block;overflow:visible;pointer-events:none;"
+  xmlns="http://www.w3.org/2000/svg">
+  <circle cx="58" cy="8" r="12" fill="#111"/>
+  <circle cx="72" cy="3" r="8" fill="#111"/>
+  <circle cx="81" cy="7" r="14" fill="#111"/>
+  <circle cx="95" cy="4" r="7" fill="#111"/>
+  <circle cx="103" cy="10" r="11" fill="#111"/>
+  <circle cx="47" cy="12" r="7" fill="#111"/>
+  <circle cx="38" cy="17" r="10" fill="#111"/>
+  <circle cx="113" cy="18" r="9" fill="#111"/>
+  <circle cx="120" cy="28" r="12" fill="#111"/>
+  <circle cx="126" cy="40" r="8" fill="#111"/>
+  <circle cx="124" cy="52" r="13" fill="#111"/>
+  <circle cx="119" cy="65" r="7" fill="#111"/>
+  <circle cx="118" cy="75" r="11" fill="#111"/>
+  <circle cx="113" cy="86" r="8" fill="#111"/>
+  <circle cx="104" cy="95" r="12" fill="#111"/>
+  <circle cx="91" cy="101" r="9" fill="#111"/>
+  <circle cx="78" cy="104" r="13" fill="#111"/>
+  <circle cx="64" cy="102" r="8" fill="#111"/>
+  <circle cx="51" cy="97" r="11" fill="#111"/>
+  <circle cx="40" cy="89" r="7" fill="#111"/>
+  <circle cx="30" cy="78" r="13" fill="#111"/>
+  <circle cx="24" cy="65" r="7" fill="#111"/>
+  <circle cx="22" cy="52" r="12" fill="#111"/>
+  <circle cx="26" cy="38" r="8" fill="#111"/>
+  <circle cx="31" cy="27" r="11" fill="#111"/>
+  <ellipse cx="76" cy="-4" rx="5" ry="10" fill="#111" transform="rotate(-15 76 -4)"/>
+  <ellipse cx="130" cy="58" rx="10" ry="5" fill="#111" transform="rotate(10 130 58)"/>
+  <ellipse cx="18" cy="55" rx="10" ry="4" fill="#111" transform="rotate(-8 18 55)"/>
+  <ellipse cx="76" cy="112" rx="5" ry="9" fill="#111" transform="rotate(8 76 112)"/>
+  <ellipse cx="76" cy="54" rx="54" ry="52" fill="#111"/>
+  <!-- large eye -->
+  <circle cx="56" cy="50" r="17" fill="white"/>
+  <circle id="elp1" cx="56" cy="50" r="11" fill="#111"/>
+  <circle id="elh1" cx="50" cy="44" r="3.5" fill="white"/>
+  <!-- small eye top-right -->
+  <circle cx="97" cy="37" r="9" fill="white"/>
+  <circle id="elp2" cx="97" cy="37" r="6" fill="#111"/>
+  <circle id="elh2" cx="93" cy="33" r="1.5" fill="white"/>
+  <!-- medium eye bottom-right -->
+  <circle cx="93" cy="65" r="12" fill="white"/>
+  <circle id="elp3" cx="93" cy="65" r="5" fill="#111"/>
+  <circle id="elh3" cx="91" cy="63" r="1.5" fill="white"/>
+</svg>
+  </div>
+  <span class="nav-center">et cetera</span>
+  <span style="width:60px;"></span>
+</nav>
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="word">"I</span> <span class="word">will</span> <span class="word">see</span> <span class="word">you</span> <span class="word">down</span> <span class="word">the</span> <span class="word">road."</span></div>
+  </div>
+</div>
+
+
+<div class="grid" id="photoGrid">
+  <div class="grid-item" onclick="openLb(0)">
+    <img src="photos/001.jpg" alt="">
+    <div class="caption">001</div>
+  </div>
+  <div class="grid-item" onclick="openLb(1)">
+    <img src="photos/002.jpg" alt="">
+    <div class="caption">002</div>
+  </div>
+  <div class="grid-item" onclick="openLb(2)">
+    <img src="photos/003.jpg" alt="">
+    <div class="caption">003</div>
+  </div>
+  <div class="grid-item" onclick="openLb(3)">
+    <img src="photos/004.jpg" alt="">
+    <div class="caption">004</div>
+  </div>
+  <div class="grid-item" onclick="openLb(4)">
+    <img src="photos/005.jpg" alt="">
+    <div class="caption">005</div>
+  </div>
+  <div class="grid-item" onclick="openLb(5)">
+    <img src="photos/006.jpg" alt="">
+    <div class="caption">006</div>
+  </div>
+  <div class="grid-item" onclick="openLb(6)">
+    <img src="photos/007.jpg" alt="">
+    <div class="caption">007</div>
+  </div>
+  <div class="grid-item" onclick="openLb(7)">
+    <img src="photos/008.jpg" alt="">
+    <div class="caption">008</div>
+  </div>
+  <div class="grid-item" onclick="openLb(8)">
+    <img src="photos/009.jpg" alt="">
+    <div class="caption">009</div>
+  </div>
+  <div class="grid-item" onclick="openLb(9)">
+    <img src="photos/010.jpg" alt="">
+    <div class="caption">010</div>
+  </div>
+  <div class="grid-item" onclick="openLb(10)">
+    <img src="photos/011.jpg" alt="">
+    <div class="caption">011</div>
+  </div>
+  <div class="grid-item" onclick="openLb(11)">
+    <img src="photos/012.jpg" alt="">
+    <div class="caption">012</div>
+  </div>
+  <div class="grid-item" onclick="openLb(12)">
+    <img src="photos/013.jpg" alt="">
+    <div class="caption">013</div>
+  </div>
+  <div class="grid-item" onclick="openLb(13)">
+    <img src="photos/014.jpg" alt="">
+    <div class="caption">014</div>
+  </div>
+  <div class="grid-item" onclick="openLb(14)">
+    <img src="photos/015.jpg" alt="">
+    <div class="caption">015</div>
+  </div>
+  <div class="grid-item" onclick="openLb(15)">
+    <img src="photos/016.jpg" alt="">
+    <div class="caption">016</div>
+  </div>
+  <div class="grid-item" onclick="openLb(16)">
+    <img src="photos/017.jpg" alt="">
+    <div class="caption">017</div>
+  </div>
+  <div class="grid-item" onclick="openLb(17)">
+    <img src="photos/018.jpg" alt="">
+    <div class="caption">018</div>
+  </div>
+  <div class="grid-item" onclick="openLb(18)">
+    <img src="photos/019.jpg" alt="">
+    <div class="caption">019</div>
+  </div>
+  <div class="grid-item" onclick="openLb(19)">
+    <img src="photos/020.jpg" alt="">
+    <div class="caption">020</div>
+  </div>
+  <div class="grid-item" onclick="openLb(20)">
+    <img src="photos/021.jpg" alt="">
+    <div class="caption">021</div>
+  </div>
+  <div class="grid-item" onclick="openLb(21)">
+    <img src="photos/022.jpg" alt="">
+    <div class="caption">022</div>
+  </div>
+  <div class="grid-item" onclick="openLb(22)">
+    <img src="photos/023.jpg" alt="">
+    <div class="caption">023</div>
+  </div>
+  <div class="grid-item" onclick="openLb(23)">
+    <img src="photos/024.jpg" alt="">
+    <div class="caption">024</div>
+  </div>
+  <div class="grid-item" onclick="openLb(24)">
+    <img src="photos/025.jpg" alt="">
+    <div class="caption">025</div>
+  </div>
+  <div class="grid-item" onclick="openLb(25)">
+    <img src="photos/026.jpg" alt="">
+    <div class="caption">026</div>
+  </div>
+  <div class="grid-item" onclick="openLb(26)">
+    <img src="photos/027.jpg" alt="">
+    <div class="caption">027</div>
+  </div>
+  <div class="grid-item" onclick="openLb(27)">
+    <img src="photos/028.jpg" alt="">
+    <div class="caption">028</div>
+  </div>
+  <div class="grid-item" onclick="openLb(28)">
+    <img src="photos/029.jpg" alt="">
+    <div class="caption">029</div>
+  </div>
+  <div class="grid-item" onclick="openLb(29)">
+    <img src="photos/030.jpg" alt="">
+    <div class="caption">030</div>
+  </div>
+  <div class="grid-item" onclick="openLb(30)">
+    <img src="photos/031.jpg" alt="">
+    <div class="caption">031</div>
+  </div>
+  <div class="grid-item" onclick="openLb(31)">
+    <img src="photos/032.jpg" alt="">
+    <div class="caption">032</div>
+  </div>
+  <div class="grid-item" onclick="openLb(32)">
+    <img src="photos/033.jpg" alt="">
+    <div class="caption">033</div>
+  </div>
+  <div class="grid-item" onclick="openLb(33)">
+    <img src="photos/034.jpg" alt="">
+    <div class="caption">034</div>
+  </div>
+  <div class="grid-item" onclick="openLb(34)">
+    <img src="photos/035.jpg" alt="">
+    <div class="caption">035</div>
+  </div>
+  <div class="grid-item" onclick="openLb(35)">
+    <img src="photos/036.jpg" alt="">
+    <div class="caption">036</div>
+  </div>
+  <div class="grid-item" onclick="openLb(36)">
+    <img src="photos/037.jpg" alt="">
+    <div class="caption">037</div>
+  </div>
+  <div class="grid-item" onclick="openLb(37)">
+    <img src="photos/038.jpg" alt="">
+    <div class="caption">038</div>
+  </div>
+  <div class="grid-item" onclick="openLb(38)">
+    <img src="photos/039.jpg" alt="">
+    <div class="caption">039</div>
+  </div>
+  <div class="grid-item" onclick="openLb(39)">
+    <img src="photos/040.jpg" alt="">
+    <div class="caption">040</div>
+  </div>
+  <div class="grid-item" onclick="openLb(40)">
+    <img src="photos/041.jpg" alt="">
+    <div class="caption">041</div>
+  </div>
+  <div class="grid-item" onclick="openLb(41)">
+    <img src="photos/042.jpg" alt="">
+    <div class="caption">042</div>
+  </div>
+  <div class="grid-item" onclick="openLb(42)">
+    <img src="photos/043.jpg" alt="">
+    <div class="caption">043</div>
+  </div>
+  <div class="grid-item" onclick="openLb(43)">
+    <img src="photos/044.jpg" alt="">
+    <div class="caption">044</div>
+  </div>
+  <div class="grid-item" onclick="openLb(44)">
+    <img src="photos/045.jpg" alt="">
+    <div class="caption">045</div>
+  </div>
+  <div class="grid-item" onclick="openLb(45)">
+    <img src="photos/046.jpg" alt="">
+    <div class="caption">046</div>
+  </div>
+  <div class="grid-item" onclick="openLb(46)">
+    <img src="photos/047.jpg" alt="">
+    <div class="caption">047</div>
+  </div>
+  <div class="grid-item" onclick="openLb(47)">
+    <img src="photos/048.jpg" alt="">
+    <div class="caption">048</div>
+  </div>
+  <div class="grid-item" onclick="openLb(48)">
+    <img src="photos/049.jpg" alt="">
+    <div class="caption">049</div>
+  </div>
+  <div class="grid-item" onclick="openLb(49)">
+    <img src="photos/050.jpg" alt="">
+    <div class="caption">050</div>
+  </div>
+  <div class="grid-item" onclick="openLb(50)">
+    <img src="photos/051.jpg" alt="">
+    <div class="caption">051</div>
+  </div>
+  <div class="grid-item" onclick="openLb(51)">
+    <img src="photos/052.jpg" alt="">
+    <div class="caption">052</div>
+  </div>
+  <div class="grid-item" onclick="openLb(52)">
+    <img src="photos/053.jpg" alt="">
+    <div class="caption">053</div>
+  </div>
+  <div class="grid-item" onclick="openLb(53)">
+    <img src="photos/054.jpg" alt="">
+    <div class="caption">054</div>
+  </div>
+  <div class="grid-item" onclick="openLb(54)">
+    <img src="photos/055.jpg" alt="">
+    <div class="caption">055</div>
+  </div>
+  <div class="grid-item" onclick="openLb(55)">
+    <img src="photos/056.jpg" alt="">
+    <div class="caption">056</div>
+  </div>
+  <div class="grid-item" onclick="openLb(56)">
+    <img src="photos/057.jpg" alt="">
+    <div class="caption">057</div>
+  </div>
+  <div class="grid-item" onclick="openLb(57)">
+    <img src="photos/058.jpg" alt="">
+    <div class="caption">058</div>
+  </div>
+  <div class="grid-item" onclick="openLb(58)">
+    <img src="photos/059.jpg" alt="">
+    <div class="caption">059</div>
+  </div>
+  <div class="grid-item" onclick="openLb(59)">
+    <img src="photos/060.jpg" alt="">
+    <div class="caption">060</div>
+  </div>
+  <div class="grid-item" onclick="openLb(60)">
+    <img src="photos/061.jpg" alt="">
+    <div class="caption">061</div>
+  </div>
+  <div class="grid-item" onclick="openLb(61)">
+    <img src="photos/062.jpg" alt="">
+    <div class="caption">062</div>
+  </div>
+  <div class="grid-item" onclick="openLb(62)">
+    <img src="photos/063.jpg" alt="">
+    <div class="caption">063</div>
+  </div>
+  <div class="grid-item" onclick="openLb(63)">
+    <img src="photos/064.jpg" alt="">
+    <div class="caption">064</div>
+  </div>
+  <div class="grid-item" onclick="openLb(64)">
+    <img src="photos/065.jpg" alt="">
+    <div class="caption">065</div>
+  </div>
+  <div class="grid-item" onclick="openLb(65)">
+    <img src="photos/066.jpg" alt="">
+    <div class="caption">066</div>
+  </div>
+  <div class="grid-item" onclick="openLb(66)">
+    <img src="photos/067.jpg" alt="">
+    <div class="caption">067</div>
+  </div>
+  <div class="grid-item" onclick="openLb(67)">
+    <img src="photos/068.jpg" alt="">
+    <div class="caption">068</div>
+  </div>
+  <div class="grid-item" onclick="openLb(68)">
+    <img src="photos/069.jpg" alt="">
+    <div class="caption">069</div>
+  </div>
+  <div class="grid-item" onclick="openLb(69)">
+    <img src="photos/070.jpg" alt="">
+    <div class="caption">070</div>
+  </div>
+  <div class="grid-item" onclick="openLb(70)">
+    <img src="photos/071.jpg" alt="">
+    <div class="caption">071</div>
+  </div>
+  <div class="grid-item" onclick="openLb(71)">
+    <img src="photos/072.jpg" alt="">
+    <div class="caption">072</div>
+  </div>
+  <div class="grid-item" onclick="openLb(72)">
+    <img src="photos/073.jpg" alt="">
+    <div class="caption">073</div>
+  </div>
+  <div class="grid-item" onclick="openLb(73)">
+    <img src="photos/074.jpg" alt="">
+    <div class="caption">074</div>
+  </div>
+  <div class="grid-item" onclick="openLb(74)">
+    <img src="photos/075.jpg" alt="">
+    <div class="caption">075</div>
+  </div>
+  <div class="grid-item" onclick="openLb(75)">
+    <img src="photos/076.jpg" alt="">
+    <div class="caption">076</div>
+  </div>
+  <div class="grid-item" onclick="openLb(76)">
+    <img src="photos/077.jpg" alt="">
+    <div class="caption">077</div>
+  </div>
+  <div class="grid-item" onclick="openLb(77)">
+    <img src="photos/078.jpg" alt="">
+    <div class="caption">078</div>
+  </div>
+  <div class="grid-item" onclick="openLb(78)">
+    <img src="photos/079.jpg" alt="">
+    <div class="caption">079</div>
+  </div>
+  <div class="grid-item" onclick="openLb(79)">
+    <img src="photos/080.jpg" alt="">
+    <div class="caption">080</div>
+  </div>
+  <div class="grid-item" onclick="openLb(80)">
+    <img src="photos/081.jpg" alt="">
+    <div class="caption">081</div>
+  </div>
+  <div class="grid-item" onclick="openLb(81)">
+    <img src="photos/082.jpg" alt="">
+    <div class="caption">082</div>
+  </div>
+  <div class="grid-item" onclick="openLb(82)">
+    <img src="photos/083.jpg" alt="">
+    <div class="caption">083</div>
+  </div>
+  <div class="grid-item" onclick="openLb(83)">
+    <img src="photos/084.jpg" alt="">
+    <div class="caption">084</div>
+  </div>
+  <div class="grid-item" onclick="openLb(84)">
+    <img src="photos/085.jpg" alt="">
+    <div class="caption">085</div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb">
+  <div class="lb-close-wrap" id="lbCloseBtn" onclick="closeLbWithExplosion()">
+<svg id="closeCreature" viewBox="0 0 160 130" width="44" height="36"
+  style="cursor:pointer;display:block;overflow:visible;"
+  xmlns="http://www.w3.org/2000/svg">
+  <circle cx="58" cy="8" r="12" fill="#111"/>
+  <circle cx="81" cy="7" r="14" fill="#111"/>
+  <circle cx="103" cy="10" r="11" fill="#111"/>
+  <circle cx="38" cy="17" r="10" fill="#111"/>
+  <circle cx="120" cy="28" r="12" fill="#111"/>
+  <circle cx="124" cy="52" r="13" fill="#111"/>
+  <circle cx="118" cy="75" r="11" fill="#111"/>
+  <circle cx="104" cy="95" r="12" fill="#111"/>
+  <circle cx="78" cy="104" r="13" fill="#111"/>
+  <circle cx="51" cy="97" r="11" fill="#111"/>
+  <circle cx="30" cy="78" r="13" fill="#111"/>
+  <circle cx="22" cy="52" r="12" fill="#111"/>
+  <circle cx="31" cy="27" r="11" fill="#111"/>
+  <ellipse cx="76" cy="-4" rx="5" ry="10" fill="#111" transform="rotate(-15 76 -4)"/>
+  <ellipse cx="130" cy="58" rx="10" ry="5" fill="#111" transform="rotate(10 130 58)"/>
+  <ellipse cx="18" cy="55" rx="10" ry="4" fill="#111" transform="rotate(-8 18 55)"/>
+  <ellipse cx="76" cy="112" rx="5" ry="9" fill="#111" transform="rotate(8 76 112)"/>
+  <ellipse cx="76" cy="54" rx="54" ry="52" fill="#111"/>
+  <circle cx="56" cy="50" r="17" fill="white"/>
+  <circle id="clp1" cx="56" cy="50" r="11" fill="#111"/>
+  <circle id="clh1" cx="50" cy="44" r="3.5" fill="white"/>
+  <circle cx="97" cy="37" r="9" fill="white"/>
+  <circle id="clp2" cx="97" cy="37" r="6" fill="#111"/>
+  <circle id="clh2" cx="93" cy="33" r="1.5" fill="white"/>
+  <circle cx="93" cy="65" r="12" fill="white"/>
+  <circle id="clp3" cx="93" cy="65" r="5" fill="#111"/>
+  <circle id="clh3" cx="91" cy="63" r="1.5" fill="white"/>
+</svg>
+  </div>
+  <button class="lb-nav prev" onclick="navLb(-1)">←</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-meta" id="lbMeta"></div>
+  <button class="lb-nav next" onclick="navLb(1)">→</button>
+</div>
+
+<script>
+// ── NAV CREATURE EYE TRACKING ──
+const etcEyes = [
+  {pid:'elp1',hid:'elh1',cx:56,cy:50,maxR:4,hox:-6,hoy:-6},
+  {pid:'elp2',hid:'elh2',cx:97,cy:37,maxR:2,hox:-4,hoy:-4},
+  {pid:'elp3',hid:'elh3',cx:93,cy:65,maxR:2,hox:-2,hoy:-2},
+];
+
+document.addEventListener('mousemove', e => {
+  const svg = document.getElementById('etcLogoSvg');
+  if(!svg) return;
+  const rect = svg.getBoundingClientRect();
+  const scaleX = 160/rect.width, scaleY = 130/rect.height;
+  const mx = (e.clientX - rect.left)*scaleX;
+  const my = (e.clientY - rect.top)*scaleY;
+  etcEyes.forEach(eye => {
+    const p = document.getElementById(eye.pid);
+    const h = document.getElementById(eye.hid);
+    if(!p||!h) return;
+    const dx=mx-eye.cx, dy=my-eye.cy;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const move=Math.min(dist*0.15,eye.maxR);
+    const nx=dist>0?(dx/dist)*move:0;
+    const ny=dist>0?(dy/dist)*move:0;
+    p.setAttribute('cx',(eye.cx+nx).toFixed(2));
+    p.setAttribute('cy',(eye.cy+ny).toFixed(2));
+    h.setAttribute('cx',(eye.cx+nx+eye.hox).toFixed(2));
+    h.setAttribute('cy',(eye.cy+ny+eye.hoy).toFixed(2));
+  });
+});
+
+// ── NAV CREATURE BLINK ──
+function blink(pid, hid){
+  const p = document.getElementById(pid);
+  if(!p) return;
+  const origR = p.getAttribute('r');
+  p.setAttribute('r','0.5');
+  setTimeout(()=>p.setAttribute('r', origR), 120);
+}
+function randomBlink(){
+  const eyes = [['elp1','elh1'],['elp2','elh2'],['elp3','elh3']];
+  const [pid,hid] = eyes[Math.floor(Math.random()*eyes.length)];
+  blink(pid,hid);
+  setTimeout(randomBlink, 2000 + Math.random()*3000);
+}
+randomBlink();
+
+// ── CLOSE CREATURE SPIN ──
+let closeRot = 0;
+const closeCreature = document.getElementById('closeCreature');
+function spinClose(){
+  closeRot += 1.5;
+  if(closeCreature) closeCreature.style.transform = `rotate(${closeRot}deg)`;
+  requestAnimationFrame(spinClose);
+}
+spinClose();
+
+// ── CLOSE CREATURE EYE TRACKING ──
+const closeEyes = [
+  {pid:'clp1',hid:'clh1',cx:56,cy:50,maxR:4,hox:-6,hoy:-6},
+  {pid:'clp2',hid:'clh2',cx:97,cy:37,maxR:2,hox:-4,hoy:-4},
+  {pid:'clp3',hid:'clh3',cx:93,cy:65,maxR:2,hox:-2,hoy:-2},
+];
+document.addEventListener('mousemove', e => {
+  const svg = document.getElementById('closeCreature');
+  if(!svg) return;
+  const rect = svg.getBoundingClientRect();
+  const scaleX = 160/rect.width, scaleY = 130/rect.height;
+  const mx = (e.clientX-rect.left)*scaleX;
+  const my = (e.clientY-rect.top)*scaleY;
+  closeEyes.forEach(eye=>{
+    const p=document.getElementById(eye.pid);
+    const h=document.getElementById(eye.hid);
+    if(!p||!h) return;
+    const dx=mx-eye.cx, dy=my-eye.cy;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const move=Math.min(dist*0.15,eye.maxR);
+    const nx=dist>0?(dx/dist)*move:0;
+    const ny=dist>0?(dy/dist)*move:0;
+    p.setAttribute('cx',(eye.cx+nx).toFixed(2));
+    p.setAttribute('cy',(eye.cy+ny).toFixed(2));
+    h.setAttribute('cx',(eye.cx+nx+eye.hox).toFixed(2));
+    h.setAttribute('cy',(eye.cy+ny+eye.hoy).toFixed(2));
+  });
+});
+
+// ── LIGHTBOX ──
+const items = document.querySelectorAll('.grid-item');
+let cur = 0;
+
+function openLb(idx){
+  cur=idx; renderLb();
+  document.getElementById('lb').classList.add('on');
+}
+function closeLb(){
+  document.getElementById('lb').classList.remove('on');
+}
+
+function closeLbWithExplosion(){
+  const btn = document.getElementById('lbCloseBtn');
+  const rect = btn ? btn.getBoundingClientRect() : {left:window.innerWidth/2, top:window.innerHeight/2, width:44, height:36};
+  const ox = rect.left + rect.width/2;
+  const oy = rect.top  + rect.height/2;
+  const COUNT = 16;
+  const clones = [];
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const colors = ['#111','#111','#111','#C8102E','#1A6FDB'];
+  for(let i=0;i<COUNT;i++){
+    const size = 15+Math.random()*30;
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    const el = document.createElement('div');
+    el.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);';
+    el.innerHTML = `<svg viewBox="0 0 160 130" width="${size}" height="${Math.round(size*.82)}" style="overflow:visible;display:block;" xmlns="http://www.w3.org/2000/svg"><ellipse cx="76" cy="54" rx="54" ry="52" fill="${color}"/><circle cx="56" cy="50" r="13" fill="white"/><circle cx="56" cy="50" r="8" fill="${color}"/><circle cx="93" cy="62" r="9" fill="white"/><circle cx="93" cy="62" r="4" fill="${color}"/></svg>`;
+    el.style.left=ox+'px'; el.style.top=oy+'px';
+    document.body.appendChild(el);
+    clones.push({el, tx:(Math.random()-0.5)*400, ty:(Math.random()-0.5)*400});
+  }
+  let start=null;
+  (function anim(ts){
+    if(!start) start=ts;
+    const p=Math.min((ts-start)/600,1);
+    const ease=1-Math.pow(1-p,3);
+    clones.forEach(c=>{
+      c.el.style.left=(ox+c.tx*ease)+'px';
+      c.el.style.top =(oy+c.ty*ease)+'px';
+      c.el.style.opacity=(1-ease*.9).toFixed(3);
+      c.el.style.transform=`translate(-50%,-50%) scale(${(.2+ease*.8).toFixed(2)})`;
+    });
+    if(p<1){ requestAnimationFrame(anim); }
+    else { clones.forEach(c=>{if(c.el.parentNode)c.el.remove();}); closeLb(); }
+  })(performance.now());
+}
+function navLb(dir){
+  cur=(cur+dir+items.length)%items.length;
+  renderLb();
+}
+function renderLb(){
+  const item=items[cur];
+  const img=item.querySelector('img');
+  const cap=item.querySelector('.caption');
+  const lbImg=document.getElementById('lbImg');
+  if(img){lbImg.src=img.src;lbImg.style.display='block';}
+  else{lbImg.src='';lbImg.style.display='none';}
+  document.getElementById('lbMeta').textContent=
+    (cap?cap.textContent.trim():'')+' — '+(cur+1)+' / '+items.length;
+}
+
+document.addEventListener('keydown',e=>{
+  const lb=document.getElementById('lb');
+  if(!lb.classList.contains('on')) return;
+  if(e.key==='ArrowRight') navLb(1);
+  if(e.key==='ArrowLeft') navLb(-1);
+  if(e.key==='Escape') closeLb();
+});
+document.getElementById('lb').addEventListener('click',function(e){
+  if(e.target===this) closeLb();
+});
+</script>
+
+<script>
+// ── TICKER WORD FADE ──
+(function(){
+  const track = document.querySelector('.ticker-track');
+  const words = document.querySelectorAll('.ticker-item .word');
+  const FADE_ZONE = 200;
+  function updateFade(){
+    words.forEach(w => {
+      const rect = w.getBoundingClientRect();
+      if(rect.right < 0){
+        w.style.opacity = '0';
+      } else if(rect.left < FADE_ZONE){
+        w.style.opacity = Math.max(0, rect.left/FADE_ZONE).toFixed(3);
+      } else {
+        w.style.opacity = '1';
+      }
+    });
+    requestAnimationFrame(updateFade);
+  }
+  updateFade();
+})();
+</script>
+
+
+<script>
+// ── CREATURE DRIFT (follows mouse, organic) ──
+(function(){
+  const logo = document.getElementById('etcLogo');
+  if(!logo) return;
+
+  let posX = 36, posY = 22;
+  let velX = 0, velY = 0;
+  let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+
+  document.addEventListener('mousemove', e => { mouseX=e.clientX; mouseY=e.clientY; });
+
+  let t = 0;
+  const px1=Math.random()*Math.PI*2, px2=Math.random()*Math.PI*2;
+  const py1=Math.random()*Math.PI*2, py2=Math.random()*Math.PI*2;
+
+  function drift(){
+    t += 0.002;
+    const W = window.innerWidth, H = window.innerHeight;
+    const cx = posX + 44, cy = posY + 36;
+    const dx = mouseX - cx, dy = mouseY - cy;
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    const pull = Math.min(dist*0.0003, 0.018);
+    const pullX = dist>0?(dx/dist)*pull:0;
+    const pullY = dist>0?(dy/dist)*pull:0;
+    const noiseX = Math.sin(t*0.9+px1)*0.008+Math.sin(t*1.6+px2)*0.004;
+    const noiseY = Math.cos(t*0.7+py1)*0.008+Math.cos(t*1.3+py2)*0.004;
+    velX += pullX+noiseX; velY += pullY+noiseY;
+    velX *= 0.96; velY *= 0.96;
+    const spd = Math.sqrt(velX*velX+velY*velY);
+    if(spd>0.8){velX=velX/spd*0.8;velY=velY/spd*0.8;}
+    posX += velX; posY += velY;
+    if(posX<10){posX=10;velX=Math.abs(velX)*0.5;}
+    if(posX>W-88){posX=W-88;velX=-Math.abs(velX)*0.5;}
+    if(posY<10){posY=10;velY=Math.abs(velY)*0.5;}
+    if(posY>H-72){posY=H-72;velY=-Math.abs(velY)*0.5;}
+    logo.style.left = posX.toFixed(1)+'px';
+    logo.style.top  = posY.toFixed(1)+'px';
+    requestAnimationFrame(drift);
+  }
+  drift();
+})();
+
+// ── CLOSE CREATURE EXPLOSION ──
+function makeMiniCreature(size){
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);';
+  el.innerHTML = `<svg viewBox="0 0 160 130" width="${size}" height="${Math.round(size*.82)}"
+    style="overflow:visible;display:block;" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="58" cy="8" r="12" fill="#111"/>
+    <circle cx="81" cy="7" r="14" fill="#111"/>
+    <circle cx="103" cy="10" r="11" fill="#111"/>
+    <circle cx="38" cy="17" r="10" fill="#111"/>
+    <circle cx="120" cy="28" r="12" fill="#111"/>
+    <circle cx="124" cy="52" r="13" fill="#111"/>
+    <circle cx="118" cy="75" r="11" fill="#111"/>
+    <circle cx="104" cy="95" r="12" fill="#111"/>
+    <circle cx="78" cy="104" r="13" fill="#111"/>
+    <circle cx="51" cy="97" r="11" fill="#111"/>
+    <circle cx="30" cy="78" r="13" fill="#111"/>
+    <circle cx="22" cy="52" r="12" fill="#111"/>
+    <circle cx="31" cy="27" r="11" fill="#111"/>
+    <ellipse cx="76" cy="54" rx="54" ry="52" fill="#111"/>
+    <circle cx="56" cy="50" r="13" fill="white"/>
+    <circle cx="56" cy="50" r="8" fill="#111"/>
+    <circle cx="51" cy="45" r="2.5" fill="white"/>
+    <circle cx="93" cy="62" r="9" fill="white"/>
+    <circle cx="93" cy="62" r="4" fill="#111"/>
+    <circle cx="89" cy="58" r="1.5" fill="white"/>
+  </svg>`;
+  return el;
+}
+
+// Override closeLb to trigger explosion first
+const _originalCloseLb = closeLb;
+window.closeLbWithExplosion = function(){
+  const btn = document.getElementById('lbCloseBtn');
+  if(!btn) { closeLb(); return; }
+  const rect = btn.getBoundingClientRect();
+  const ox = rect.left + rect.width/2;
+  const oy = rect.top  + rect.height/2;
+
+  const COUNT = 16;
+  const clones = [];
+  for(let i=0;i<COUNT;i++){
+    const size = 15+Math.random()*30;
+    const el = makeMiniCreature(size);
+    el.style.left = ox+'px'; el.style.top = oy+'px';
+    document.body.appendChild(el);
+    const angle = (i/COUNT)*Math.PI*2+(Math.random()-.5)*.4;
+    const spd = 80+Math.random()*140;
+    clones.push({el, tx:Math.cos(angle)*spd, ty:Math.sin(angle)*spd});
+  }
+
+  let start=null;
+  const DUR=600;
+  function anim(ts){
+    if(!start) start=ts;
+    const p=Math.min((ts-start)/DUR,1);
+    const ease=1-Math.pow(1-p,3);
+    clones.forEach(c=>{
+      c.el.style.left=(ox+c.tx*ease)+'px';
+      c.el.style.top =(oy+c.ty*ease)+'px';
+      c.el.style.opacity=(1-ease*.9).toFixed(3);
+      c.el.style.transform=`translate(-50%,-50%) scale(${(.2+ease*.8).toFixed(2)})`;
+    });
+    if(p<1){ requestAnimationFrame(anim); }
+    else {
+      clones.forEach(c=>{if(c.el.parentNode)c.el.remove();});
+      closeLb();
+    }
+  }
+  requestAnimationFrame(anim);
+};
+</script>
+
+
+<script>
+function makeMini(size, color){
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);';
+  el.innerHTML = `<svg viewBox="0 0 160 130" width="${size}" height="${Math.round(size*.82)}"
+    style="overflow:visible;display:block;" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="58" cy="8" r="12" fill="${color}"/>
+    <circle cx="81" cy="7" r="14" fill="${color}"/>
+    <circle cx="103" cy="10" r="11" fill="${color}"/>
+    <circle cx="38" cy="17" r="10" fill="${color}"/>
+    <circle cx="120" cy="28" r="12" fill="${color}"/>
+    <circle cx="124" cy="52" r="13" fill="${color}"/>
+    <circle cx="118" cy="75" r="11" fill="${color}"/>
+    <circle cx="104" cy="95" r="12" fill="${color}"/>
+    <circle cx="78" cy="104" r="13" fill="${color}"/>
+    <circle cx="51" cy="97" r="11" fill="${color}"/>
+    <circle cx="30" cy="78" r="13" fill="${color}"/>
+    <circle cx="22" cy="52" r="12" fill="${color}"/>
+    <circle cx="31" cy="27" r="11" fill="${color}"/>
+    <ellipse cx="76" cy="54" rx="54" ry="52" fill="${color}"/>
+    <circle cx="56" cy="50" r="13" fill="white"/>
+    <circle cx="56" cy="50" r="8" fill="${color}"/>
+    <circle cx="51" cy="45" r="2.5" fill="white"/>
+    <circle cx="93" cy="62" r="9" fill="white"/>
+    <circle cx="93" cy="62" r="4" fill="${color}"/>
+    <circle cx="89" cy="58" r="1.5" fill="white"/>
+  </svg>`;
+  return el;
+}
+
+function explodeAndGo(url, e){
+  const ox = (e && e.clientX) ? e.clientX : window.innerWidth/2;
+  const oy = (e && e.clientY) ? e.clientY : window.innerHeight/2;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  const COUNT = 40;
+  const clones = [];
+  const colors = ['#111','#111','#111','#111','#111','#C8102E','#1A6FDB'];
+
+  for(let i=0;i<COUNT;i++){
+    const size = 12 + Math.random()*50;
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    const el = makeMini(size, color);
+    el.style.left = ox+'px';
+    el.style.top  = oy+'px';
+    el.style.opacity = '1';
+    document.body.appendChild(el);
+
+    // scatter to random positions across full screen
+    const tx = (Math.random() * vw) - ox;
+    const ty = (Math.random() * vh) - oy;
+    clones.push({el, tx, ty});
+  }
+
+  let start = null;
+  const DUR = 800;
+  function anim(ts){
+    if(!start) start=ts;
+    const p = Math.min((ts-start)/DUR, 1);
+    const ease = 1-Math.pow(1-p,3);
+    clones.forEach(c=>{
+      c.el.style.left = (ox + c.tx*ease)+'px';
+      c.el.style.top  = (oy + c.ty*ease)+'px';
+      c.el.style.opacity = (1-ease*.9).toFixed(3);
+      c.el.style.transform = `translate(-50%,-50%) scale(${(.1+ease).toFixed(2)})`;
+    });
+    if(p<1){
+      requestAnimationFrame(anim);
+    } else {
+      clones.forEach(c=>{if(c.el.parentNode)c.el.remove();});
+      setTimeout(()=>{ window.location.href = url; }, 50);
+    }
+  }
+  requestAnimationFrame(anim);
+}
+</script>
+
+</body>
+</html>
